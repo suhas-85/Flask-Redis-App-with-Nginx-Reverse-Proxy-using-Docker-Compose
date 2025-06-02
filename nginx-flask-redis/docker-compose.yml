@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./app
+    networks:
+      - frontend
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    networks:
+      - frontend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+    networks:
+      - frontend
+
+networks:
+  frontend:
